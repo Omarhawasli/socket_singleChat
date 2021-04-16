@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <style>
+        *{
+            padding:0;
+            margin:0;
+            box-sizing: border-box;
+        }
+        #messagesDiv{
+            background-color: gray;
+            min-height: 50vh;
+        }
+        #messageInp{
+            width:80%;
+            height: 10%;
+        }
+        #sendBtn{
+            width: 15%;
+            height: 10%;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="messagesDiv"></div>
+    <input type="text" id="messageInp">
+    <button id='sendBtn'>Send</button>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const messagesDiv = document.getElementById('messagesDiv');
+        const messageInp = document.getElementById('messageInp');
+        const sendBtn = document.getElementById('sendBtn');
+
+        sendBtn.addEventListener('click', () => {
+            socket.emit('msg',messageInp.value)
+            
+            const par = document.createElement('p');
+            par.innerText = messageInp.value;
+            messagesDiv.append(par);
+            messageInp.value = '';
+        
+        })
+        socket.on('welcomeMsg', data => {
+
+            //show the written message on messageDiv
+            const par = document.createElement('p');
+            par.innerText = data;
+            messagesDiv.append(par);
+        })
+
+        socket.on('incomeMessage', data => {
+            const par = document.createElement('p');
+            par.innerText = data;
+            messagesDiv.append(par);
+        })
+
+    </script>
+</body>
+
+</html>
